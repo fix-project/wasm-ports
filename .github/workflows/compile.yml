@@ -16,6 +16,8 @@ jobs:
       - shell: bash
         run: 'echo WASI_SDK_PATH=/home/wasm-toolchain/sysroot | sudo tee -a $GITHUB_ENV'
       - shell: bash
+        run: 'echo WASI_SYSROOT=/home/wasm-toolchain/sysroot | sudo tee -a $GITHUB_ENV'
+      - shell: bash
         run : 'echo DESTDIR=/home/wasm-toolchain/sysroot/wasix | sudo tee -a $GITHUB_ENV'
       - name: "Install wasix"
         run: |

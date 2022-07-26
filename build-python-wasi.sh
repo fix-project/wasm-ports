@@ -17,8 +17,8 @@ export CC="${WASI_SDK}/bin/clang"
 export LDSHARED="${WASI_SDK}/bin/wasm-ld"
 export AR="${WASI_SDK}/bin/llvm-ar"
 
-export CFLAGS="-isystem ${WASIX_DIR}/include -I${WASI_SDK}/include -I/usr/include"
-export LDFLAGS="-L${WASIX_DIR}/lib -lwasix -L${WASI_SDK}/lib -L/usr/lib"
+export CFLAGS="-isystem ${WASIX_DIR}/include -I${WASI_SDK}/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/local/include"
+export LDFLAGS="-L${WASIX_DIR}/lib -lwasix -L${WASI_SDK}/lib -L/usr/lib -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib/x86_64-linux-gnu -L/lib/x86_64-linux-gnu"
 
 mkdir -p cpython/builddir/wasi
 

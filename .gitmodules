@@ -3,4 +3,4 @@
 	url = https://github.com/python/cpython.git
 [submodule "wasix"]
 	path = wasix
-	url = https://github.com/singlestore-labs/wasix
+	url = git@github.com:yhdengh/wasix.git
