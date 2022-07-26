@@ -1,0 +1,6 @@
+[submodule "cpython"]
+	path = cpython
+	url = https://github.com/python/cpython.git
+[submodule "wasix"]
+	path = wasix
+	url = https://github.com/singlestore-labs/wasix

@@ -1,0 +1,41 @@
+name: Compile-python
+
+on: [push]
+
+jobs:
+  build-python:
+      runs-on: ubuntu-latest
+      container: ghcr.io/fixpointos/wasm_toolchain_docker:python-latest
+      steps:
+      - name: "checkout repository"
+        uses: "actions/checkout@v2"
+        with:
+          submodules: 'true'
+      - shell: bash
+        run: 'echo HOME=/home | sudo tee -a $GITHUB_ENV'
+      - shell: bash
+        run: 'echo WASI_SDK_PATH=/home/wasm-toolchain/sysroot | sudo tee -a $GITHUB_ENV'
+      - shell: bash
+        run : 'echo DESTDIR=/home/wasm-toolchain/sysroot/wasix | sudo tee -a $GITHUB_ENV'
+      - name: "Install wasix"
+        run: |
+          cd wasix/
+          make install
+          cd ../
+      - name: "Build python"
+        shell: bash
+        run: |
+          chmod +x build-python-wasi.sh
+          ./build-python-wasi.sh
+      - name: "Upload WASI artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: wasi-3.11
+          path: |
+            cpython/builddir/wasi/LICENSE
+            cpython/builddir/wasi/commit.txt
+            cpython/builddir/wasi/python.wasm
+            cpython/builddir/wasi/pybuilddir.txt
+            cpython/builddir/wasi/build/lib.wasi-wasm32-3.*/_sysconfigdata__wasi_wasm32-wasi.py
+            cpython/builddir/wasi/Lib/
+          if-no-files-found: error
