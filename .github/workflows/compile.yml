@@ -61,5 +61,5 @@ jobs:
         with:
           name: wabt-wasi
           path: |
-            wasi/build/
+            wabt/build/
           if-no-files-found: error

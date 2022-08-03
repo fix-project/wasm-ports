@@ -13,7 +13,8 @@ export LDSHARED="${WASI_SDK}/bin/wasm-ld"
 export AR="${WASI_SDK}/bin/llvm-ar"
 export RANLIB="${WASI_SDK}/bin/llvm-ranlib"
 
-mkdir -p wasi/build
+mkdir -p wabt/build 
+cp wabt-cmake/CMakeLists.txt wabt/CMakeLists.txt
 
 pushd wabt 
 cmake -S . -B build/ \
