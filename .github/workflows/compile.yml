@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build-python:
       runs-on: ubuntu-latest
-      container: ghcr.io/fixpointos/wasm_toolchain_docker:latest
+      container: ghcr.io/fix-project/wasm_toolchain_docker:latest
       steps:
       - name: "checkout repository"
         uses: "actions/checkout@v2"
@@ -40,4 +40,26 @@ jobs:
             cpython/builddir/wasi/pybuilddir.txt
             cpython/builddir/wasi/build/lib.wasi-wasm32-3.*/_sysconfigdata__wasi_wasm32-wasi.py
             cpython/builddir/wasi/Lib/
+          if-no-files-found: error
+  build-wabt:
+      runs-on: ubuntu-latest
+      container: ghcr.io/fix-project/wasm_toolchain_docker:latest
+      steps:
+      - name: "checkout repository"
+        uses: "actions/checkout@v2"
+        with:
+          submodules: 'true'
+      - shell: bash
+        run: 'echo HOME=/home | sudo tee -a $GITHUB_ENV'
+      - name: "Build wabt"
+        shell: bash
+        run: |
+          chmod +x build-wabt-wasi.sh
+          ./build-wabt-wasi.sh
+      - name: "Upload WASI artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: wabt-wasi
+          path: |
+            wasi/build/
           if-no-files-found: error
