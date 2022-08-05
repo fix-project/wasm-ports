@@ -21,7 +21,7 @@ export AR="${WASI_SDK}/bin/llvm-ar"
 cp -r lib/* ${WASI_SDK}/lib/
 cp -r include/* ${WASI_SDK}/include/
 
-export CFLAGS="-isystem ${WASIX_DIR}/include -I${WASI_SDK}/include"
+export CFLAGS="-isystem ${WASIX_DIR}/include -I${WASI_SDK}/include -Wno-error=int-conversion"
 export LDFLAGS="-L${WASIX_DIR}/lib -lwasix -L${WASI_SDK}/lib"
 
 mkdir -p cpython/builddir/wasi

@@ -1,9 +1,12 @@
 [submodule "cpython"]
-	path = cpython
+	path = python/cpython
 	url = https://github.com/python/cpython.git
 [submodule "wasix"]
-	path = wasix
+	path = python/wasix
 	url = git@github.com:yhdengh/wasix.git
 [submodule "wabt"]
-	path = wabt
+	path = wabt-tools/wabt
 	url = git@github.com:fix-project/wabt.git
+[submodule "clang-port/llvm-project"]
+	path = clang-port/llvm-project
+	url = git@github.com:llvm/llvm-project.git

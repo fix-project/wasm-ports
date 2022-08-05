@@ -21,12 +21,14 @@ jobs:
         run : 'echo DESTDIR=/home/wasm-toolchain/sysroot/wasix | sudo tee -a $GITHUB_ENV'
       - name: "Install wasix"
         run: |
+          cd python/
           cd wasix/
           make install
           cd ../
       - name: "Build python"
         shell: bash
         run: |
+          cd python/
           chmod +x build-python-wasi.sh
           ./build-python-wasi.sh
       - name: "Upload WASI artifacts"
@@ -34,12 +36,12 @@ jobs:
         with:
           name: wasi-3.11
           path: |
-            cpython/builddir/wasi/LICENSE
-            cpython/builddir/wasi/commit.txt
-            cpython/builddir/wasi/python.wasm
-            cpython/builddir/wasi/pybuilddir.txt
-            cpython/builddir/wasi/build/lib.wasi-wasm32-3.*/_sysconfigdata__wasi_wasm32-wasi.py
-            cpython/builddir/wasi/Lib/
+            python/cpython/builddir/wasi/LICENSE
+            python/cpython/builddir/wasi/commit.txt
+            python/cpython/builddir/wasi/python.wasm
+            python/cpython/builddir/wasi/pybuilddir.txt
+            python/cpython/builddir/wasi/build/lib.wasi-wasm32-3.*/_sysconfigdata__wasi_wasm32-wasi.py
+            python/cpython/builddir/wasi/Lib/
           if-no-files-found: error
   build-wabt:
       runs-on: ubuntu-latest
@@ -54,6 +56,7 @@ jobs:
       - name: "Build wabt"
         shell: bash
         run: |
+          cd wabt-tools
           chmod +x build-wabt-wasi.sh
           ./build-wabt-wasi.sh
       - name: "Upload WASI artifacts"
@@ -61,5 +64,5 @@ jobs:
         with:
           name: wabt-wasi
           path: |
-            wabt/build/
+            wabt-tools/wabt/build/
           if-no-files-found: error
