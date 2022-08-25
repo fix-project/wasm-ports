@@ -13,6 +13,10 @@ export LDSHARED="${WASI_SDK}/bin/wasm-ld"
 export AR="${WASI_SDK}/bin/llvm-ar"
 export RANLIB="${WASI_SDK}/bin/llvm-ranlib"
 
+export CFLAGS="-I${WASIX_DIR}/include -I${WASI_SDK}/include -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_MMAN"
+export CXXFLAGS="-I${WASIX_DIR}/include -I${WASI_SDK}/include -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_MMAN"
+export LDFLAGS="-L${WASIX_DIR}/lib -lwasix -L${WASI_SDK}/lib -L${WASI_SDK}/lib/wasm32-wasi -lwasi-emulated-signal -lwasi-emulated-mman"
+
 mkdir -p wabt/build 
 cp wabt-cmake/CMakeLists.txt wabt/CMakeLists.txt
 
