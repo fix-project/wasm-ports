@@ -20,11 +20,8 @@ export LDFLAGS="-L${WASIX_DIR}/lib -lwasix -L${WASI_SDK}/lib -L${WASI_SDK}/lib/w
 mkdir -p wabt/build 
 cp wabt-cmake/CMakeLists.txt wabt/CMakeLists.txt
 
-pushd wabt 
 cmake -S . -B build/ \
    -DBUILD_TESTS=OFF \
    -DBUILD_LIBWASM=OFF
 
 cmake --build build/ --parallel $(nproc)
-popd
-
