@@ -52,7 +52,7 @@ jobs:
         with:
           name: wabt-wasi
           path: |
-            wabt-tools/wabt/build/
+            wabt-tools/build/
           if-no-files-found: error
   build-clang:
       runs-on: ubuntu-latest
