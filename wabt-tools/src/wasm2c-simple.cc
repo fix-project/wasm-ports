@@ -37,7 +37,7 @@ extern void attach_tree_ro_table_0( externref ) __attribute__( ( import_module( 
 extern void set_rw_table_0( int32_t, externref ) __attribute__( ( import_module( "asm" ), import_name( "set_rw_table_0" ) ) );
 extern externref create_tree_rw_table_0( int32_t ) __attribute__( ( import_module( "fixpoint" ), import_name( "create_tree_rw_table_0" ) ) );
 
-tuple<unique_ptr<OutputBuffer>, unique_ptr<OutputBuffer>, string> wasm_to_c( const void* wasm_source, size_t source_size ) __attribute__( ( export_name( "wasmtoc" ) ) ) {
+tuple<unique_ptr<OutputBuffer>, unique_ptr<OutputBuffer>, unique_ptr<OutputBuffer>> wasm_to_c( const void* wasm_source, size_t source_size ) __attribute__( ( export_name( "wasmtoc" ) ) ) {
   Errors errors;
   Module module;
 
@@ -66,9 +66,9 @@ tuple<unique_ptr<OutputBuffer>, unique_ptr<OutputBuffer>, string> wasm_to_c( con
   MemoryStream h_stream;
   WriteC( &c_stream, &h_stream, "function.h", &module, write_c_options );
 
-  string fix_header = initcomposer::compose_header( "function", &module, &errors, &inspector );
+  unique_ptr<OutputBuffer> fix_header (initcomposer::compose_header( "function", &module, &errors, &inspector ));
 
-  return { c_stream.ReleaseOutputBuffer(), h_stream.ReleaseOutputBuffer(), fix_header };
+  return { c_stream.ReleaseOutputBuffer(), h_stream.ReleaseOutputBuffer(), std::move(fix_header) };
 }
 
 externref fixpoint_apply( externref encode ) {
@@ -85,11 +85,11 @@ externref fixpoint_apply( externref encode ) {
 
   program_memory_to_rw_0(0, c_output->data.data(), c_output->size());
   program_memory_to_rw_1(0, h_output->data.data(), h_output->size());
-  program_memory_to_rw_2(0, fix_header.data(), fix_header.size());
+  program_memory_to_rw_2(0, fix_header->data.data(), fix_header->size());
 
   externref c_blob = create_blob_rw_mem_0( c_output->size() );
   externref h_blob = create_blob_rw_mem_1( h_output->size() );
-  externref fix_header_blob = create_blob_rw_mem_2( fix_header.size() );
+  externref fix_header_blob = create_blob_rw_mem_2( fix_header->size() );
 
   free( buffer );
 
