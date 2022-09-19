@@ -1,6 +1,6 @@
 add_link_options(-nostdlib -Wl,--no-entry -Wl,--allow-undefined)
 
-add_library(wasm2c-simple-obj OBJECT "wasm2c-simple.cc" "wasminspector.cc")
+add_library(wasm2c-simple-obj OBJECT "wasm2c-simple.cc" "wasminspector.cc" "initcomposer.cc")
 target_link_libraries(wasm2c-simple-obj wabt)
 
 add_custom_command(
@@ -11,6 +11,7 @@ add_custom_command(
   COMMAND $ENV{HOME}/wasm-toolchain/sysroot/bin/wasm-ld
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasm2c-simple.cc.o
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasminspector.cc.o
+          ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/initcomposer.cc.o
           ${CMAKE_BINARY_DIR}/wabt/CMakeFiles/wasm2c.dir/src/c-writer.cc.o
           ${CMAKE_BINARY_DIR}/wabt/libwabt.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++.a
