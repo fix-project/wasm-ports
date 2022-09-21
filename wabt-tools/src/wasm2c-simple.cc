@@ -22,10 +22,14 @@ using namespace std;
 
 typedef char __attribute__( ( address_space( 10 ) ) ) * externref;
 externref fixpoint_apply( externref encode ) __attribute__( ( export_name( "_fixpoint_apply" ) ) );
+
 extern void program_memory_to_rw_0( int32_t, const void*, int32_t ) __attribute__( ( import_module( "asm" ), import_name( "program_memory_to_rw_0" ) ) );
 extern void program_memory_to_rw_1( int32_t, const void*, int32_t ) __attribute__( ( import_module( "asm" ), import_name( "program_memory_to_rw_1" ) ) );
 extern void program_memory_to_rw_2( int32_t, const void*, int32_t ) __attribute__( ( import_module( "asm" ), import_name( "program_memory_to_rw_2" ) ) );
 extern void ro_0_to_program_memory( const void*, int32_t, int32_t ) __attribute__( ( import_module( "asm" ), import_name( "ro_0_to_program_memory" ) ) );
+extern int32_t grow_rw_0( int32_t ) __attribute__( ( import_module( "asm" ), import_name( "grow_rw_0" ) ) );
+extern int32_t grow_rw_1( int32_t ) __attribute__( ( import_module( "asm" ), import_name( "grow_rw_1" ) ) );
+extern int32_t grow_rw_2( int32_t ) __attribute__( ( import_module( "asm" ), import_name( "grow_rw_2" ) ) );
 
 extern void attach_blob_ro_mem_0( externref ) __attribute__( ( import_module( "fixpoint" ), import_name( "attach_blob_ro_mem_0" ) ) );
 extern int32_t size_ro_mem_0( void ) __attribute__( ( import_module( "fixpoint" ), import_name( "size_ro_mem_0" ) ) );
@@ -74,7 +78,7 @@ tuple<string, string, string> wasm_to_c( const void* wasm_source, size_t source_
 
 externref fixpoint_apply( externref encode ) {
   attach_tree_ro_table_0( encode );
-  attach_blob_ro_mem_0( get_ro_table_0( 0 ) );
+  attach_blob_ro_mem_0( get_ro_table_0( 2 ) );
 
   char* buffer = (char*)malloc( size_ro_mem_0() );
   ro_0_to_program_memory( buffer, 0, size_ro_mem_0() );
@@ -83,6 +87,16 @@ externref fixpoint_apply( externref encode ) {
   auto& c_output = get<0>( result );
   auto& h_output = get<1>( result );
   auto& fix_header = get<2>( result );
+
+  if ( ( c_output.size() >> 12 ) > 0 ) {
+    grow_rw_0( c_output.size() >> 12 );
+  }
+  if ( ( h_output.size() >> 12 ) > 0 ) {
+    grow_rw_1( h_output.size() >> 12 );
+  }
+  if ( ( fix_header.size() >> 12 ) > 0 ) {
+    grow_rw_2( fix_header.size() >> 12 );
+  }
 
   program_memory_to_rw_0(0, c_output.data(), c_output.size());
   program_memory_to_rw_1(0, h_output.data(), h_output.size());

@@ -13,6 +13,10 @@
     (local.get $ptr)
     (local.get $len))
   )
+  (func (export "grow_rw_0") (param $size i32) (result i32)
+    (memory.grow $ccontent
+    (local.get $size))
+  )
   ;; rw_1
   (func (export "program_memory_to_rw_1") (param $offset i32) (param $ptr i32) (param $len i32)
     (memory.copy $program_mem $cheader
@@ -20,12 +24,20 @@
     (local.get $ptr)
     (local.get $len))
   )
+  (func (export "grow_rw_1") (param $size i32) (result i32)
+    (memory.grow $cheader
+    (local.get $size))
+  )
   ;; rw_2
   (func (export "program_memory_to_rw_2") (param $offset i32) (param $ptr i32) (param $len i32)
     (memory.copy $program_mem $composer
     (local.get $offset)
     (local.get $ptr)
     (local.get $len))
+  )
+  (func (export "grow_rw_2") (param $size i32) (result i32)
+    (memory.grow $composer
+    (local.get $size))
   )
   ;; ro_0
   (func (export "ro_0_to_program_memory") (param $offset i32) (param $ptr i32) (param $len i32)
