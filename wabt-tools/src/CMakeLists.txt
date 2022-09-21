@@ -3,11 +3,14 @@ add_link_options(-nostdlib -Wl,--no-entry -Wl,--allow-undefined)
 add_library(wasm2c-simple-obj OBJECT "wasm2c-simple.cc" "wasminspector.cc" "initcomposer.cc")
 target_link_libraries(wasm2c-simple-obj wabt)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -target wasm32")
+
 add_custom_command(
   OUTPUT  "wasm2c-simple-no-asm.wasm"
   DEPENDS wasm2c-simple-obj 
           wasm2c-simple.cc
           wasminspector.cc
+          wasm2c
   COMMAND $ENV{HOME}/wasm-toolchain/sysroot/bin/wasm-ld
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasm2c-simple.cc.o
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasminspector.cc.o
@@ -33,7 +36,15 @@ add_custom_command(
 )
 
 add_custom_command(
-  OUTPUT "wasm2c-simple.wasm"
+  OUTPUT "wasisnapshot.wasm"
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/wasisnapshot.wat
+  COMMAND $ENV{HOME}/wasm-toolchain/wabt/build/wat2wasm
+          ${CMAKE_CURRENT_SOURCE_DIR}/wasisnapshot.wat
+          -o wasisnapshot.wasm
+)
+
+add_custom_command(
+  OUTPUT "wasm2c-simple-no-wasi.wasm"
   DEPENDS asm.wasm
           wasm2c-simple-no-asm.wasm
   COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
@@ -42,6 +53,20 @@ add_custom_command(
           wasm2c-simple-no-asm.wasm
           asm.wasm
           -m wasm2c
+          -o wasm2c-simple-no-wasi.wasm
+)
+
+add_custom_command(
+  OUTPUT "wasm2c-simple.wasm"
+  DEPENDS wasisnapshot.wasm
+          wasm2c-simple-no-wasi.wasm
+  COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --enable-multi-memory
+	        --enable-exceptions
+          wasm2c-simple-no-wasi.wasm
+          wasisnapshot.wasm
+          -m wasm2c
+          -n wasi_snapshot_preview1
           -o wasm2c-simple.wasm
 )
 

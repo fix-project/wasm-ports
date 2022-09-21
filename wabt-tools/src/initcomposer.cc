@@ -2,7 +2,7 @@
 
 #include "src/c-writer.h"
 #include "src/error.h"
-#include "src/stream.h"
+#include "memorystringstream.hh"
 
 using namespace std;
 using namespace wabt;
@@ -46,7 +46,7 @@ public:
   {
   }
 
-  unique_ptr<OutputBuffer> compose_header();
+  string compose_header();
 
 private:
   wabt::Module* current_module_;
@@ -54,7 +54,7 @@ private:
   string wasm_name_;
   string state_info_type_name_;
   string module_prefix_;
-  MemoryStream result_;
+  MemoryStringStream result_;
   wasminspector::WasmInspector* inspector_;
 
   void Write(string content);
@@ -235,7 +235,7 @@ void InitComposer::write_get_instance_size()
   Write( buf );
 }
 
-unique_ptr<OutputBuffer> InitComposer::compose_header()
+string InitComposer::compose_header()
 {
   string buf = "";
   buf = buf + "#include <immintrin.h>" + "\n";
@@ -266,10 +266,10 @@ unique_ptr<OutputBuffer> InitComposer::compose_header()
   buf = buf + "}" + "\n";
   Write( buf );
 
-  return result_.ReleaseOutputBuffer();
+  return result_.ReleaseStringBuf();
 }
 
-unique_ptr<OutputBuffer> compose_header( string wasm_name, Module* module, Errors* error, wasminspector::WasmInspector* inspector )
+string compose_header( string wasm_name, Module* module, Errors* error, wasminspector::WasmInspector* inspector )
 {
   InitComposer composer( wasm_name, module, error, inspector );
   return composer.compose_header();
