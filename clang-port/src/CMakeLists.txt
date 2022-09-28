@@ -1,6 +1,7 @@
 add_link_options(-nostdlib -Wl,--no-entry -Wl,--allow-undefined)
 
 add_library(clang-fix-obj OBJECT "clang-fix.cc")
+add_library(stub-obj OBJECT "stubs.c")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -target wasm32")
 
@@ -8,6 +9,8 @@ add_custom_command(
   OUTPUT "clang-fix-no-asm.wasm"
   DEPENDS clang-fix-obj
           clang-fix.cc
+          stub-obj
+          stubs.c
   COMMAND $ENV{HOME}/wasm-toolchain/sysroot/bin/wasm-ld
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/clang-fix-obj.dir/clang-fix.cc.o
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libclangFrontend.a
@@ -21,6 +24,7 @@ add_custom_command(
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libclangAST.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libclangLex.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libclangBasic.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libclangSupport.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAggressiveInstCombine.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAnalysis.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAsmParser.a
@@ -73,9 +77,10 @@ add_custom_command(
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86Info.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86TargetMCA.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMipo.a
-	  $ENV{HOME}/wasm-toolchain/sysroot/wasix/lib/libwasix.a
-	  $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-signal.a
-	  $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-mman.a
+          ${CMAKE_BINARY_DIR}/src/CMakeFiles/stub-obj.dir/stubs.c.o
+          $ENV{HOME}/wasm-toolchain/sysroot/wasix/lib/libwasix.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-signal.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-mman.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++abi.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc.a
