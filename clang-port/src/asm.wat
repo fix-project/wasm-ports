@@ -1,5 +1,5 @@
 (module
-  (import "wasm2c" "memory" (memory $program_mem 0))
+  (import "clang" "memory" (memory $program_mem 0))
   (memory $elfcontent (export "rw_mem_0") 1)
   (memory $wasmcontent (export "ro_mem_0") 0)
   (table $input (export "ro_table_0") 0 externref)

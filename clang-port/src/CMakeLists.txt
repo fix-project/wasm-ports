@@ -90,7 +90,30 @@ add_custom_command(
           --allow-undefined
 )
 
+add_custom_command(
+  OUTPUT "asm.wasm"
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/asm.wat
+  COMMAND $ENV{HOME}/wasm-toolchain/wabt/build/wat2wasm
+          --enable-multi-memory
+	        --enable-exceptions
+          ${CMAKE_CURRENT_SOURCE_DIR}/asm.wat
+          -o asm.wasm
+)
+
+add_custom_command(
+  OUTPUT "clang-fix-no-wasi.wasm"
+  DEPENDS asm.wasm
+          clang-fix-no-asm.wasm
+  COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --enable-multi-memory
+	        --enable-exceptions
+          clang-fix-no-asm.wasm
+          asm.wasm
+          -m clang 
+          -o clang-fix-no-wasi.wasm
+)
+
 add_custom_target(
   clang-fix ALL
-  DEPENDS clang-fix-no-asm.wasm
+  DEPENDS clang-fix-no-wasi.wasm
 )
