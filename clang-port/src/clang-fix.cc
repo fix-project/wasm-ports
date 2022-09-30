@@ -70,7 +70,9 @@ string c_to_elf( string_view depfile_views [], string_view sourcefile_views [] )
   compilerInstance.setFileManager( new FileManager( FileSystemOptions {}, InMemFS ) );
   
   auto compilerInvocation = std::make_shared<CompilerInvocation>();
-  CompilerInvocation::CreateFromArgs(*compilerInvocation, cc1args, *diagEngine);
+  if ( !CompilerInvocation::CreateFromArgs(*compilerInvocation, cc1args, *diagEngine) ) {
+    return diagOS.str() + "\nFailed to create compiler invocation.\n"; 
+  }
   
   LLVMContext context;
   std::unique_ptr<CodeGenAction> action( new EmitLLVMOnlyAction( &context ) );
@@ -81,9 +83,14 @@ string c_to_elf( string_view depfile_views [], string_view sourcefile_views [] )
   codegenOptions.CodeModel = "large";
   codegenOptions.RelocationModel = llvm::Reloc::Static;
 
-  compilerInstance.ExecuteAction( *action );
+  if ( !compilerInstance.ExecuteAction( *action ) ) {
+    return diagOS.str() + "\nFailed to emit llvm\n"; 
+  }
 
   std::unique_ptr<llvm::Module> module = action->takeModule();
+  if ( !module ) {
+    return diagOS.str() + "\nFailed to take module\n";
+  }
 
   std::string res;
   raw_string_ostream Str_OS( res );
