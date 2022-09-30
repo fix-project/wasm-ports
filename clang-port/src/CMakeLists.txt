@@ -101,6 +101,15 @@ add_custom_command(
 )
 
 add_custom_command(
+  OUTPUT "wasisnapshot.wasm"
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/wasisnapshot.wat
+  COMMAND $ENV{HOME}/wasm-toolchain/wabt/build/wat2wasm
+          ${CMAKE_CURRENT_SOURCE_DIR}/wasisnapshot.wat
+          --enable-multi-memory
+          -o wasisnapshot.wasm
+)
+
+add_custom_command(
   OUTPUT "clang-fix-no-wasi.wasm"
   DEPENDS asm.wasm
           clang-fix-no-asm.wasm
@@ -113,7 +122,21 @@ add_custom_command(
           -o clang-fix-no-wasi.wasm
 )
 
+add_custom_command(
+  OUTPUT "clang-fix.wasm"
+  DEPENDS wasisnapshot.wasm
+          clang-fix-no-wasi.wasm
+  COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --enable-multi-memory
+	        --enable-exceptions
+          clang-fix-no-wasi.wasm
+          wasisnapshot.wasm
+          -m clang 
+          -n wasi_snapshot_preview1
+          -o clang-fix.wasm
+)
+
 add_custom_target(
   clang-fix ALL
-  DEPENDS clang-fix-no-wasi.wasm
+  DEPENDS clang-fix.wasm
 )

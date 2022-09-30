@@ -70,6 +70,8 @@ jobs:
           cd clang-port
           chmod +x build-clang-wasi.sh
           ./build-clang-wasi.sh
+          chmod +x build-clang-fix.sh
+          ./build-clang-fix.sh
       - name: "Upload WASI artifacts"
         uses: actions/upload-artifact@v2
         with:
