@@ -3,7 +3,7 @@
 	url = https://github.com/python/cpython.git
 [submodule "wabt"]
 	path = wabt-tools/wabt
-	url = git@github.com:fix-project/wabt.git
+	url = https://github.com/fix-project/wabt.git
 [submodule "clang-port/llvm-project"]
 	path = clang-port/llvm-project
-	url = git@github.com:llvm/llvm-project.git
+	url = https://github.com/llvm/llvm-project.git
