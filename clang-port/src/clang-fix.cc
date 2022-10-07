@@ -56,7 +56,7 @@ string c_to_elf( string_view depfile_views [], string_view sourcefile_views [] )
   // Create File System
   IntrusiveRefCntPtr<vfs::InMemoryFileSystem> InMemFS( new vfs::InMemoryFileSystem() );
   
-  for ( size_t i = 0; i < 146; i++ ) {
+  for ( size_t i = 0; i < 147; i++ ) {
     InMemFS->addFile( clangdeps[i], 0, MemoryBuffer::getMemBuffer( depfile_views[i] ) );
   }
 
