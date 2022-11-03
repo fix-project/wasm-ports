@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8.12)
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0115 NEW)
 
-project(fixpoint)
+project(clang-port)
+
+include(etc/clang_format.cmake)
 
 include_directories(${PROJECT_SOURCE_DIR}/llvm-project/clang/include)
 include_directories(${PROJECT_SOURCE_DIR}/llvm-project/llvm/include)

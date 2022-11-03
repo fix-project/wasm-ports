@@ -1,6 +1,7 @@
 add_link_options(-nostdlib -Wl,--no-entry -Wl,--allow-undefined)
 
 add_library(clang-fix-obj OBJECT "clang-fix.cc")
+add_library(wasisnapshot-obj OBJECT "wasisnapshot.c")
 add_library(stub-obj OBJECT "stubs.c")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -target wasm32")
@@ -44,6 +45,7 @@ add_custom_command(
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDebugInfoPDB.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDemangle.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMExtensions.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMFrontendHLSL.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMFrontendOpenMP.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMGlobalISel.a
           ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMIRReader.a
@@ -131,7 +133,7 @@ add_custom_command(
 	        --enable-exceptions
           clang-fix-no-wasi.wasm
           wasisnapshot.wasm
-          -m clang 
+          -m asm
           -n wasi_snapshot_preview1
           -o clang-fix.wasm
 )
