@@ -1,4 +1,4 @@
-const char *clangdeps[] = {
+const char *system_deps[] = {
     "/usr/include/math.h",
     "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h",
     "/usr/include/features.h",
@@ -61,7 +61,9 @@ const char *clangdeps[] = {
     "/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h",
     "/usr/include/setjmp.h",
     "/usr/include/x86_64-linux-gnu/bits/setjmp.h",
-    "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h",
+    "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h"};
+
+const char *clang_deps[] = {
     "/usr/lib/llvm-16/lib/clang/16.0.0/include/immintrin.h",
     "/usr/lib/llvm-16/lib/clang/16.0.0/include/x86gprintrin.h",
     "/usr/lib/llvm-16/lib/clang/16.0.0/include/hresetintrin.h",

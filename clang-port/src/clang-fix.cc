@@ -53,8 +53,9 @@ extern void attach_tree_ro_table_1(externref)
 using namespace clang;
 using namespace llvm;
 
-string c_to_elf(char *dep_files[], char *function_c_buffer,
-                char *function_h_buffer, char *function_fixpoint_h_buffer) {
+string c_to_elf(char *system_dep_files[], char *clang_dep_files[],
+                char *function_c_buffer, char *function_h_buffer,
+                char *function_fixpoint_h_buffer) {
   llvm::InitializeAllTargets();
   llvm::InitializeAllTargetMCs();
   llvm::InitializeAllAsmPrinters();
@@ -77,8 +78,14 @@ string c_to_elf(char *dep_files[], char *function_c_buffer,
   IntrusiveRefCntPtr<vfs::InMemoryFileSystem> InMemFS(
       new vfs::InMemoryFileSystem());
 
-  for (size_t i = 0; i < 147; i++) {
-    InMemFS->addFile(clangdeps[i], 0, MemoryBuffer::getMemBuffer(dep_files[i]));
+  for (size_t i = 0; i < 63; i++) {
+    InMemFS->addFile(system_deps[i], 0,
+                     MemoryBuffer::getMemBuffer(system_dep_files[i]));
+  }
+
+  for (size_t i = 0; i < 84; i++) {
+    InMemFS->addFile(clang_deps[i], 0,
+                     MemoryBuffer::getMemBuffer(clang_dep_files[i]));
   }
 
   InMemFS->addFile("/fix/function.c", 0,
@@ -135,34 +142,45 @@ string c_to_elf(char *dep_files[], char *function_c_buffer,
 
 externref fixpoint_apply(externref encode) {
   attach_tree_ro_table_0(encode);
-  attach_tree_ro_table_1(get_ro_table_0(2));
 
-  char *dep_files[147];
-  for (size_t i = 0; i < 147; i++) {
+  attach_tree_ro_table_1(get_ro_table_0(2));
+  char *system_dep_files[63];
+  for (size_t i = 0; i < 63; i++) {
     attach_blob_ro_mem_0(get_ro_table_1(i));
     char *buffer = (char *)malloc(size_ro_mem_0() + 1);
     ro_0_to_program_memory(buffer, 0, size_ro_mem_0());
     buffer[size_ro_mem_0()] = '\0';
-    dep_files[i] = buffer;
+    system_dep_files[i] = buffer;
   }
 
-  attach_blob_ro_mem_0(get_ro_table_0(3));
+  attach_tree_ro_table_1(get_ro_table_0(3));
+  char *clang_dep_files[84];
+  for (size_t i = 0; i < 84; i++) {
+    attach_blob_ro_mem_0(get_ro_table_1(i));
+    char *buffer = (char *)malloc(size_ro_mem_0() + 1);
+    ro_0_to_program_memory(buffer, 0, size_ro_mem_0());
+    buffer[size_ro_mem_0()] = '\0';
+    clang_dep_files[i] = buffer;
+  }
+
+  attach_tree_ro_table_1(get_ro_table_0(4));
+  attach_blob_ro_mem_0(get_ro_table_1(0));
   char *function_c_buffer = (char *)malloc(size_ro_mem_0() + 1);
   ro_0_to_program_memory(function_c_buffer, 0, size_ro_mem_0());
   function_c_buffer[size_ro_mem_0()] = '\0';
 
-  attach_blob_ro_mem_0(get_ro_table_0(4));
+  attach_blob_ro_mem_0(get_ro_table_1(1));
   char *function_h_buffer = (char *)malloc(size_ro_mem_0() + 1);
   ro_0_to_program_memory(function_h_buffer, 0, size_ro_mem_0());
   function_h_buffer[size_ro_mem_0()] = '\0';
 
-  attach_blob_ro_mem_0(get_ro_table_0(5));
+  attach_blob_ro_mem_0(get_ro_table_1(2));
   char *function_fixpoint_h_buffer = (char *)malloc(size_ro_mem_0() + 1);
   ro_0_to_program_memory(function_fixpoint_h_buffer, 0, size_ro_mem_0());
   function_fixpoint_h_buffer[size_ro_mem_0()] = '\0';
 
-  string res = c_to_elf(dep_files, function_c_buffer, function_h_buffer,
-                        function_fixpoint_h_buffer);
+  string res = c_to_elf(system_dep_files, clang_dep_files, function_c_buffer,
+                        function_h_buffer, function_fixpoint_h_buffer);
 
   if ((res.size() >> 12) > 0) {
     grow_rw_0(res.size() >> 12);
