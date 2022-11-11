@@ -1,6 +1,6 @@
 name: Compile-python
 
-on: [push]
+on: [workflow_dispatch, push]
 
 jobs:
   build-python:
