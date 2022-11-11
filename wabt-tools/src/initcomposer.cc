@@ -1,7 +1,7 @@
 #include "initcomposer.hh"
 
-#include "src/c-writer.h"
-#include "src/error.h"
+#include "wabt/c-writer.h"
+#include "wabt/error.h"
 #include "memorystringstream.hh"
 
 using namespace std;

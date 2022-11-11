@@ -1,4 +1,4 @@
-#include "src/stream.h"
+#include "wabt/stream.h"
 
 class MemoryStringStream : public wabt::Stream
 {

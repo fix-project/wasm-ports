@@ -15,7 +15,6 @@ add_custom_command(
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasm2c-simple.cc.o
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/wasminspector.cc.o
           ${CMAKE_BINARY_DIR}/src/CMakeFiles/wasm2c-simple-obj.dir/initcomposer.cc.o
-          ${CMAKE_BINARY_DIR}/wabt/CMakeFiles/wasm2c.dir/src/c-writer.cc.o
           ${CMAKE_BINARY_DIR}/wabt/libwabt.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++.a
           $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++abi.a
