@@ -109,7 +109,7 @@ externref fixpoint_apply( externref encode ) {
   free( buffer );
 
   set_rw_table_0( 0, c_blob );
-  set_rw_table_0( 1, h_blob );
-  set_rw_table_0( 2, fix_header_blob );
+  set_rw_table_0( 1, fix_header_blob );
+  set_rw_table_0( 2, h_blob );
   return create_tree_rw_table_0( 3 );
 }
