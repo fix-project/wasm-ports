@@ -83,7 +83,7 @@ string c_to_elf(char *system_dep_files[], char *clang_dep_files[],
                      MemoryBuffer::getMemBuffer(system_dep_files[i]));
   }
 
-  for (size_t i = 0; i < 84; i++) {
+  for (size_t i = 0; i < 92; i++) {
     InMemFS->addFile(clang_deps[i], 0,
                      MemoryBuffer::getMemBuffer(clang_dep_files[i]));
   }
@@ -105,7 +105,7 @@ string c_to_elf(char *system_dep_files[], char *clang_dep_files[],
   auto compilerInvocation = std::make_shared<CompilerInvocation>();
   if (!CompilerInvocation::CreateFromArgs(*compilerInvocation, cc1args,
                                           *diagEngine)) {
-    return "\nFailed to create compiler invocation.\n";
+    return diagOS.str() + "\nFailed to create compiler invocation.\n";
   }
 
   LLVMContext context;
@@ -154,8 +154,8 @@ externref fixpoint_apply(externref encode) {
   }
 
   attach_tree_ro_table_1(get_ro_table_0(3));
-  char *clang_dep_files[84];
-  for (size_t i = 0; i < 84; i++) {
+  char *clang_dep_files[92];
+  for (size_t i = 0; i < 92; i++) {
     attach_blob_ro_mem_0(get_ro_table_1(i));
     char *buffer = (char *)malloc(size_ro_mem_0() + 1);
     ro_0_to_program_memory(buffer, 0, size_ro_mem_0());
