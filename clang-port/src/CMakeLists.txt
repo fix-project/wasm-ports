@@ -90,6 +90,7 @@ add_custom_command(
           -o clang-fix-no-asm.wasm
           --no-entry
           --allow-undefined
+          -z stack-size=1048576
 )
 
 add_custom_command(

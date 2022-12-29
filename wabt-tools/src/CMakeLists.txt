@@ -22,6 +22,7 @@ add_custom_command(
           -o wasm2c-simple-no-asm.wasm
           --no-entry
           --allow-undefined
+          -z stack-size=1048576
 )
 
 add_custom_command(
