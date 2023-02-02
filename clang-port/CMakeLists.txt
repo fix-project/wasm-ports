@@ -7,6 +7,7 @@ project(clang-port)
 include(etc/clang_format.cmake)
 
 include_directories(${PROJECT_SOURCE_DIR}/llvm-project/clang/include)
+include_directories(${PROJECT_SOURCE_DIR}/llvm-project/lld/include)
 include_directories(${PROJECT_SOURCE_DIR}/llvm-project/llvm/include)
 include_directories(${PROJECT_SOURCE_DIR}/llvm-project/build/include)
 include_directories(${PROJECT_SOURCE_DIR}/src)

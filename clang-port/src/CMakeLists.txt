@@ -1,6 +1,7 @@
 add_link_options(-nostdlib -Wl,--no-entry -Wl,--allow-undefined)
 
 add_library(clang-fix-obj OBJECT "clang-fix.cc")
+add_library(lld-fix-obj OBJECT "lld-fix.cc")
 add_library(wasisnapshot-obj OBJECT "wasisnapshot.c")
 add_library(stub-obj OBJECT "stubs.c")
 
@@ -117,6 +118,7 @@ add_custom_command(
   DEPENDS asm.wasm
           clang-fix-no-asm.wasm
   COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --debug-names
           --enable-multi-memory
 	        --enable-exceptions
           clang-fix-no-asm.wasm
@@ -130,6 +132,7 @@ add_custom_command(
   DEPENDS wasisnapshot.wasm
           clang-fix-no-wasi.wasm
   COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --debug-names
           --enable-multi-memory
 	        --enable-exceptions
           clang-fix-no-wasi.wasm
@@ -142,4 +145,115 @@ add_custom_command(
 add_custom_target(
   clang-fix ALL
   DEPENDS clang-fix.wasm
+)
+
+add_custom_command(
+  OUTPUT "lld-fix-no-asm.wasm"
+  DEPENDS lld-fix-obj
+          lld-fix.cc
+          stub-obj
+          stubs.c
+  COMMAND $ENV{HOME}/wasm-toolchain/sysroot/bin/wasm-ld
+          ${CMAKE_BINARY_DIR}/src/CMakeFiles/lld-fix-obj.dir/lld-fix.cc.o
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/liblldCommon.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/liblldELF.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAggressiveInstCombine.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAnalysis.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAsmParser.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMAsmPrinter.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMBinaryFormat.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMBitReader.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMBitWriter.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMBitstreamReader.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMCFGuard.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMCodeGen.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMCore.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMCoroutines.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDebugInfoCodeView.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDebugInfoDWARF.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDebugInfoMSF.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDebugInfoPDB.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMDemangle.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMExtensions.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMFrontendOpenMP.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMGlobalISel.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMIRReader.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMInstCombine.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMInstrumentation.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMLTO.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMLinker.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMMC.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMMCDisassembler.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMMCParser.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMObjCARCOpts.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMObject.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMOption.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMPasses.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMProfileData.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMRemarks.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMScalarOpts.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMSelectionDAG.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMSupport.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMSymbolize.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMTarget.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMTextAPI.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMTransformUtils.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMVectorize.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMWindowsDriver.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMWindowsManifest.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86AsmParser.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86CodeGen.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86Desc.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86Disassembler.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86Info.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMX86TargetMCA.a
+          ${CMAKE_BINARY_DIR}/../llvm-project/build/lib/libLLVMipo.a
+          ${CMAKE_BINARY_DIR}/src/CMakeFiles/stub-obj.dir/stubs.c.o
+          $ENV{HOME}/wasm-toolchain/sysroot/wasix/lib/libwasix.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-signal.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libwasi-emulated-mman.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc++abi.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/wasm32-wasi/libc.a
+          $ENV{HOME}/wasm-toolchain/sysroot/lib/clang/16.0.0/lib/wasi/libclang_rt.builtins-wasm32.a
+          -o lld-fix-no-asm.wasm
+          --no-entry
+          --allow-undefined
+          -z stack-size=1048576
+)
+
+
+add_custom_command(
+  OUTPUT "lld-fix-no-wasi.wasm"
+  DEPENDS asm.wasm
+          lld-fix-no-asm.wasm
+  COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --debug-names
+          --enable-multi-memory
+          --enable-exceptions
+          lld-fix-no-asm.wasm
+          asm.wasm
+          -m clang
+          -n asm
+          -o lld-fix-no-wasi.wasm
+)
+
+add_custom_command(
+  OUTPUT "lld-fix.wasm"
+  DEPENDS wasisnapshot.wasm
+          lld-fix-no-wasi.wasm
+  COMMAND $ENV{HOME}/wasm-toolchain/wasm-tools/build/src/module-combiner/wasmlink
+          --debug-names
+          --enable-multi-memory
+          --enable-exceptions
+          lld-fix-no-wasi.wasm
+          wasisnapshot.wasm
+          -m asm
+          -n wasi_snapshot_preview1
+          -o lld-fix.wasm
+)
+
+add_custom_target(
+  lld-fix ALL
+  DEPENDS lld-fix.wasm
 )

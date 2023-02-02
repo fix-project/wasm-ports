@@ -182,8 +182,8 @@ externref fixpoint_apply(externref encode) {
   string res = c_to_elf(system_dep_files, clang_dep_files, function_c_buffer,
                         function_h_buffer, function_fixpoint_h_buffer);
 
-  if ((res.size() >> 12) > 0) {
-    grow_rw_0(res.size() >> 12);
+  if ((res.size() >> 16) > 0) {
+    grow_rw_0(res.size() >> 16);
   }
   program_memory_to_rw_0(0, res.data(), res.size());
   return create_blob_rw_mem_0(res.size());
